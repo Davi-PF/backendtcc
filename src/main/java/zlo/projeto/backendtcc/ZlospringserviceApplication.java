@@ -6,7 +6,6 @@ import com.google.firebase.FirebaseOptions;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
-
 import java.io.IOException;
 
 @SpringBootApplication
@@ -31,5 +30,6 @@ public class ZlospringserviceApplication {
 			FirebaseApp.initializeApp(options);
 		}
 	}
-
+		SpringApplication.run(ZlospringserviceApplication.class, args);
+	}
 }
