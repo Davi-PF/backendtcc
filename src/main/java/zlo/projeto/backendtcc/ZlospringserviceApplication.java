@@ -30,6 +30,4 @@ public class ZlospringserviceApplication {
 			FirebaseApp.initializeApp(options);
 		}
 	}
-		SpringApplication.run(ZlospringserviceApplication.class, args);
-	}
 }
