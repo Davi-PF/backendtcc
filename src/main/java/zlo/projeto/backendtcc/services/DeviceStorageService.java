@@ -5,18 +5,13 @@ import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import zlo.projeto.backendtcc.controllers.DeviceStorageController;
+import zlo.projeto.backendtcc.DTO.DeviceStorageDTO;
 import zlo.projeto.backendtcc.data.DeviceStorageVO;
-import zlo.projeto.backendtcc.exceptions.RequiredObjectIsNullException;
 import zlo.projeto.backendtcc.model.DeviceStorage;
 import zlo.projeto.backendtcc.model.Responsible;
 import zlo.projeto.backendtcc.repositories.DeviceStorageRepository;
 import zlo.projeto.backendtcc.repositories.ResponsibleRepository;
 import zlo.projeto.backendtcc.repositories.mapper.DozerMapper;
-import zlo.projeto.backendtcc.DTO.DeviceStorageDTO;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.List;
 import java.util.logging.Logger;
