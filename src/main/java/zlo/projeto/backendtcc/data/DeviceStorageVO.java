@@ -2,6 +2,8 @@ package zlo.projeto.backendtcc.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serial;
@@ -9,6 +11,8 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
+@Setter
+@Getter
 @JsonPropertyOrder({"id", "tokenDispositivo", "dataCadastro"})
 public class DeviceStorageVO extends RepresentationModel<DeviceStorageVO> implements Serializable {
 
@@ -30,30 +34,6 @@ public class DeviceStorageVO extends RepresentationModel<DeviceStorageVO> implem
     public DeviceStorageVO(Integer id, String tokenDispositivo, Instant dataCadastro) {
         this.id = id;
         this.tokenDispositivo = tokenDispositivo;
-        this.dataCadastro = dataCadastro;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getTokenDispositivo() {
-        return tokenDispositivo;
-    }
-
-    public void setTokenDispositivo(String tokenDispositivo) {
-        this.tokenDispositivo = tokenDispositivo;
-    }
-
-    public Instant getDataCadastro() {
-        return dataCadastro;
-    }
-
-    public void setDataCadastro(Instant dataCadastro) {
         this.dataCadastro = dataCadastro;
     }
 
