@@ -23,7 +23,7 @@ public class ZlospringserviceApplication {
 
 	private static void initializeFirebase() throws IOException {
 		FirebaseOptions options = FirebaseOptions.builder()
-				.setCredentials(GoogleCredentials.getApplicationDefault()) // Usa a variável de ambiente
+				.setCredentials(GoogleCredentials.getApplicationDefault())
 				.build();
 
 		if (FirebaseApp.getApps().isEmpty()) {
