@@ -1,6 +1,6 @@
 package zlo.projeto.backendtcc.controllers;
 
-import zlo.projeto.backendtcc.model.ScanHistory;
+import zlo.projeto.backendtcc.entities.ScanHistory;
 import zlo.projeto.backendtcc.repositories.ScanHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

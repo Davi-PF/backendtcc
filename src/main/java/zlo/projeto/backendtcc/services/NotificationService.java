@@ -2,10 +2,17 @@ package zlo.projeto.backendtcc.services;
 
 import com.google.firebase.messaging.*;
 import org.springframework.stereotype.Service;
-import zlo.projeto.backendtcc.model.NotificationRequest;
+import zlo.projeto.backendtcc.entities.notification.NotificationRequest;
 
 @Service
 public class NotificationService {
+
+    private final FirebaseMessaging firebaseMessaging;
+
+    public NotificationService(FirebaseMessaging firebaseMessaging) {
+        this.firebaseMessaging = firebaseMessaging;
+    }
+
 
     public String sendNotification(NotificationRequest request) throws FirebaseMessagingException {
         Message message = Message.builder()
@@ -23,6 +30,6 @@ public class NotificationService {
                 .build();
 
         // Send the message using FirebaseMessaging
-        return FirebaseMessaging.getInstance().send(message);
+        return firebaseMessaging.send(message);
     }
 }

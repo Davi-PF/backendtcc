@@ -1,79 +1,67 @@
 package zlo.projeto.backendtcc.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-import org.springframework.data.web.PagedResourcesAssembler;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import zlo.projeto.backendtcc.DTO.DeviceStorageDTO;
-import zlo.projeto.backendtcc.data.DeviceStorageVO;
-import zlo.projeto.backendtcc.model.DeviceStorage;
-import zlo.projeto.backendtcc.model.Responsible;
-import zlo.projeto.backendtcc.repositories.DeviceStorageRepository;
-import zlo.projeto.backendtcc.repositories.ResponsibleRepository;
-import zlo.projeto.backendtcc.repositories.mapper.DozerMapper;
+import zlo.projeto.backendtcc.dto.commands.DeviceStorageDTO;
+import zlo.projeto.backendtcc.repositories.interfaces.responsible.IResponsibleRepository;
+import zlo.projeto.backendtcc.vo.DeviceStorageVO;
+import zlo.projeto.backendtcc.exceptions.ServiceException;
+import zlo.projeto.backendtcc.entities.devicestorage.DeviceStorage;
+import zlo.projeto.backendtcc.entities.responsible.Responsible;
+import zlo.projeto.backendtcc.repositories.interfaces.devicestorage.IDeviceStorageRepository;
+import zlo.projeto.backendtcc.services.interfaces.devicestorage.IDeviceStorageService;
+import zlo.projeto.backendtcc.util.MapperUtil;
 
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Service
-public class DeviceStorageService {
+@Slf4j
+public class DeviceStorageService implements IDeviceStorageService {
 
-    private Logger logger = Logger.getLogger(DeviceStorageService.class.getName());
+    private final IDeviceStorageRepository deviceStorageRepository;
+    private final IResponsibleRepository responsibleRepository;
+    private final MapperUtil mapperUtil;
 
-    @Autowired
-    DeviceStorageRepository deviceStorageRepository;
+    public static final String RESPONSIBLE_NOT_FOUND = "Nenhum responsável encontrado com o CPF: ";
+    public static final String DEVICE_NOT_FOUND = "Nenhum dispositivo associado ao CPF: ";
 
-    @Autowired
-    private ResponsibleRepository responsibleRepository;
-
-    @Autowired
-    PagedResourcesAssembler<DeviceStorageVO> assembler;
-
-//    public DeviceStorageVO findDispositivoByCpfDep(String cpfDep) {
-//
-//        logger.info("Procurando os dispositivos do responsável");
-//
-//        DeviceStorage result = deviceStorageRepository.findTokenDispositivoByCpfDep(cpfDep)
-//                .orElseThrow(() -> new ResourceNotFoundException("No records found for this telephone!"));
-//
-//        return DozerMapper.parseObject(result, DeviceStorageVO.class);
-//    }
+    public DeviceStorageService(IDeviceStorageRepository deviceStorageRepository,
+                                IResponsibleRepository responsibleRepository,
+                                MapperUtil mapperUtil) {
+        this.deviceStorageRepository = deviceStorageRepository;
+        this.responsibleRepository = responsibleRepository;
+        this.mapperUtil = mapperUtil;
+    }
 
     public List<DeviceStorageVO> findDispositivosByCpfDep(String cpfDep) {
-        logger.info("Procurando os dispositivos do responsável");
+        log.info("Procurando dispositivos associados ao CPF: {}", cpfDep);
 
         List<DeviceStorage> devices = deviceStorageRepository.findTokenDispositivosByCpfDep(cpfDep);
 
         if (devices.isEmpty()) {
-            throw new ResourceNotFoundException("No records found for this telephone!");
+            throw new ServiceException(DEVICE_NOT_FOUND + cpfDep);
         }
 
         return devices.stream()
-                .map(device -> DozerMapper.parseObject(device, DeviceStorageVO.class))
+                .map(device -> mapperUtil.map(device, DeviceStorageVO.class))
                 .collect(Collectors.toList());
     }
 
     @Transactional
     public DeviceStorage createDevice(DeviceStorageDTO deviceStorageDTO) {
+        if (deviceStorageDTO.getCpfResponsavel() == null) {
+            throw new ServiceException("O CPF do responsável não pode ser nulo.");
+        }
+
+        Responsible responsible = responsibleRepository.findResponsibleByCpf(deviceStorageDTO.getCpfResponsavel())
+                .orElseThrow(() -> new ServiceException(RESPONSIBLE_NOT_FOUND + deviceStorageDTO.getCpfResponsavel()));
 
         DeviceStorage deviceStorage = new DeviceStorage();
-
-        // Configura o token
         deviceStorage.setTokenDispositivo(deviceStorageDTO.getTokenDispositivo());
-
-        // Busca o responsável pelo CPF e o associa ao dispositivo
-        Responsible responsible = responsibleRepository.findResponsibleByCpf(deviceStorageDTO.getCpfResponsavel())
-                .orElseThrow(() -> new IllegalArgumentException("Responsible not found with CPF: " + deviceStorageDTO.getCpfResponsavel()));
-        deviceStorage.setCpfResponsavel(responsible);
+        deviceStorage.setResponsavel(responsible);
 
         return deviceStorageRepository.save(deviceStorage);
-
-//        DeviceStorage entity = DozerMapper.parseObject(deviceVO, DeviceStorage.class);
-//        DeviceStorage savedEntity = deviceStorageRepository.save(entity);
-//        logger.info("Inserido um dispositivo novo");
-//        return DozerMapper.parseObject(savedEntity, DeviceStorageVO.class);
     }
-
 }

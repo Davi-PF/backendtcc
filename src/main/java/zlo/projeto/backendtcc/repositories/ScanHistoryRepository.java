@@ -1,6 +1,6 @@
 package zlo.projeto.backendtcc.repositories;
 
-import zlo.projeto.backendtcc.model.ScanHistory;
+import zlo.projeto.backendtcc.entities.ScanHistory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
