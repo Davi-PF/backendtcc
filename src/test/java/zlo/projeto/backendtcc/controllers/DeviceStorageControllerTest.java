@@ -7,9 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import zlo.projeto.backendtcc.dto.commands.DeviceStorageDTO;
 import zlo.projeto.backendtcc.controllers.devicestorage.DeviceStorageController;
+import zlo.projeto.backendtcc.dto.results.StatusResponseDTO;
+import zlo.projeto.backendtcc.entities.responsible.Responsible;
+import zlo.projeto.backendtcc.handlers.devicestorage.DeviceStorageHandler;
 import zlo.projeto.backendtcc.vo.DeviceStorageVO;
 import zlo.projeto.backendtcc.exceptions.ResourceNotFoundException;
 import zlo.projeto.backendtcc.entities.devicestorage.DeviceStorage;
@@ -34,6 +38,10 @@ public class DeviceStorageControllerTest {
 
     @MockBean
     private DeviceStorageService deviceStorageService;
+
+    @MockBean
+    private DeviceStorageHandler deviceStorageHandler;
+
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -78,14 +86,35 @@ public class DeviceStorageControllerTest {
         device.setTokenDispositivo("token123");
         device.setDataCadastro(Instant.now());
 
-        when(deviceStorageService.createDevice(any(DeviceStorageDTO.class))).thenReturn(device);
+        Responsible responsible = new Responsible();
+        responsible.setCpfRes("12345678901");
+        device.setResponsavel(responsible);
+
+        // Criar o StatusResponseDTO esperado
+        StatusResponseDTO<DeviceStorage> responseDTO = new StatusResponseDTO<>();
+        responseDTO.setContentResponse(device);
+        responseDTO.setInfoMessage("Dispositivo criado com sucesso.");
+        responseDTO.setStatusMessage("Success");
+        responseDTO.setStatus(200);
+        responseDTO.setIsOk(true); // Ou responseDTO.setOk(true); se renomeado
+
+        // Mock do handler
+        when(deviceStorageHandler.handleCreate(any(DeviceStorageDTO.class))).thenReturn(ResponseEntity.ok(responseDTO));
 
         mockMvc.perform(post("/api/devicestorage")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(deviceDTO)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.tokenDispositivo").value("token123"));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.contentResponse.tokenDispositivo").value("token123"))
+                .andExpect(jsonPath("$.contentResponse.responsavel.cpfRes").value("12345678901"))
+                .andExpect(jsonPath("$.infoMessage").value("Dispositivo criado com sucesso."))
+                .andExpect(jsonPath("$.statusMessage").value("Success"))
+                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.isOk").value(true)); // Ou "$.ok" se renomeado
     }
+
+
 
     @Test
     void testCreateDevice_ValidationError() throws Exception {

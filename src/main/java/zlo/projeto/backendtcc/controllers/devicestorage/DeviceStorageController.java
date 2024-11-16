@@ -50,7 +50,7 @@ public class DeviceStorageController {
             tags = {"Devices"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200",
-                            content = @Content(schema = @Schema(implementation = DeviceStorageVO.class))
+                            content = @Content(schema = @Schema(implementation = StatusResponseDTO.class))
                     ),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),

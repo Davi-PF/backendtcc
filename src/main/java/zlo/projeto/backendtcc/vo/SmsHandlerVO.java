@@ -43,7 +43,13 @@ public class SmsHandlerVO extends RepresentationModel<SmsHandlerVO> implements S
     }
 
     public SmsHandlerVO(int smsCode, Timestamp sendDate, Timestamp returnDate, String phoneUser, String cpfDep) {
+        this.key = smsCode;
+        this.sendDate = sendDate;
+        this.returnDate = returnDate;
+        this.phoneUser = phoneUser;
+        this.cpfDep = cpfDep;
     }
+
 
     public int getKey() {
         return key;

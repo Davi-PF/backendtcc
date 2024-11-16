@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import zlo.projeto.backendtcc.entities.notification.NotificationRequest;
-import zlo.projeto.backendtcc.services.NotificationService;
+import zlo.projeto.backendtcc.services.NotificationRequestService;
 
 @RestController
 @RequestMapping("/api/notifications")
-public class NotificationController {
+public class NotificationRequestController {
 
     @Autowired
-    private NotificationService notificationService;
+    private NotificationRequestService notificationRequestService;
 
     @PostMapping("/send")
     @Operation(summary = "Send a Notification", description = "Sends a notification to a specified token",
@@ -29,7 +29,7 @@ public class NotificationController {
             })
     public ResponseEntity<String> sendNotification(@RequestBody NotificationRequest request) {
         try {
-            String response = notificationService.sendNotification(request);
+            String response = notificationRequestService.sendNotification(request);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error sending notification: " + e.getMessage());

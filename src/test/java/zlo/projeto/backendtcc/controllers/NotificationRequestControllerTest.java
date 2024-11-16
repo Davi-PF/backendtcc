@@ -14,18 +14,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import zlo.projeto.backendtcc.controllers.notification.NotificationController;
+import zlo.projeto.backendtcc.controllers.notification.NotificationRequestController;
 import zlo.projeto.backendtcc.entities.notification.NotificationRequest;
-import zlo.projeto.backendtcc.services.NotificationService;
+import zlo.projeto.backendtcc.services.NotificationRequestService;
 
-@WebMvcTest(NotificationController.class)
-public class NotificationControllerTest {
+@WebMvcTest(NotificationRequestController.class)
+public class NotificationRequestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private NotificationService notificationService;
+    private NotificationRequestService notificationRequestService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -43,7 +43,7 @@ public class NotificationControllerTest {
         request.setTitle("Test Title");
         request.setBody("Test Body");
 
-        when(notificationService.sendNotification(any(NotificationRequest.class)))
+        when(notificationRequestService.sendNotification(any(NotificationRequest.class)))
                 .thenReturn("Notification sent successfully");
 
         // Act & Assert
@@ -62,7 +62,7 @@ public class NotificationControllerTest {
         request.setTitle("Test Title");
         request.setBody("Test Body");
 
-        when(notificationService.sendNotification(any(NotificationRequest.class)))
+        when(notificationRequestService.sendNotification(any(NotificationRequest.class)))
                 .thenThrow(new RuntimeException("Service error"));
 
         // Act & Assert

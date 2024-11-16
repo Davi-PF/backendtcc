@@ -1,12 +1,12 @@
 package zlo.projeto.backendtcc.entities.responsible;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import zlo.projeto.backendtcc.entities.devicestorage.DeviceStorage;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -152,4 +152,8 @@ public class Responsible implements Serializable {
     public int hashCode() {
         return Objects.hash(getCpfRes(), getNomeRes(), getIdadeRes(), getContato1Res(), getContato2Res(), getContato3Res(), getPlanoAssinado(), getEmailRes(), getEnderecoIdRes(), getRgRes(), getSenhaRes());
     }
+
+    @OneToMany(mappedBy = "responsavel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DeviceStorage> devices = new ArrayList<>();
+
 }

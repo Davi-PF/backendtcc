@@ -57,7 +57,7 @@ public class StatusResponseDTO<T> {
     }
 
     public void setIsOk(Boolean isOk) {
-        isOk = isOk;
+        this.isOk = isOk;
     }
 
     @Override

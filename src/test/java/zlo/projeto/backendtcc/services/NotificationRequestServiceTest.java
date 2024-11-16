@@ -20,10 +20,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class NotificationServiceTest {
+public class NotificationRequestServiceTest {
 
     @InjectMocks
-    private NotificationService notificationService;
+    private NotificationRequestService notificationRequestService;
 
     @Mock
     private FirebaseMessaging firebaseMessaging;
@@ -42,7 +42,7 @@ public class NotificationServiceTest {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
-        notificationService = new NotificationService(firebaseMessaging);  // Inject the mock
+        notificationRequestService = new NotificationRequestService(firebaseMessaging);  // Inject the mock
     }
 
     @Test
@@ -57,7 +57,7 @@ public class NotificationServiceTest {
         when(firebaseMessaging.send(any(Message.class))).thenReturn("mockedMessageId");
 
         // Act
-        String response = notificationService.sendNotification(request);
+        String response = notificationRequestService.sendNotification(request);
 
         // Assert
         assertEquals("mockedMessageId", response);  // Verifica se o retorno é o ID simulado
@@ -75,7 +75,7 @@ public class NotificationServiceTest {
         when(mockException.getMessage()).thenReturn("Mocked exception");
         when(firebaseMessaging.send(any(Message.class))).thenThrow(mockException);
 
-        FirebaseMessagingException exception = assertThrows(FirebaseMessagingException.class, () -> notificationService.sendNotification(request));
+        FirebaseMessagingException exception = assertThrows(FirebaseMessagingException.class, () -> notificationRequestService.sendNotification(request));
 
         assertEquals("Mocked exception", exception.getMessage());
         verify(firebaseMessaging, times(1)).send(any(Message.class));

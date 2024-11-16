@@ -5,11 +5,11 @@ import org.springframework.stereotype.Service;
 import zlo.projeto.backendtcc.entities.notification.NotificationRequest;
 
 @Service
-public class NotificationService {
+public class NotificationRequestService {
 
     private final FirebaseMessaging firebaseMessaging;
 
-    public NotificationService(FirebaseMessaging firebaseMessaging) {
+    public NotificationRequestService(FirebaseMessaging firebaseMessaging) {
         this.firebaseMessaging = firebaseMessaging;
     }
 
